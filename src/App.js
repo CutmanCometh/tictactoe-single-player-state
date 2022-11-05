@@ -1,9 +1,23 @@
-import { createMachine, assign, interpret } from 'xstate';
+import { createMachine, assign } from 'xstate';
 import { useMachine } from '@xstate/react';
 import './App.css';
 
 const X = 'x';
 const O = 'o';
+
+const initialContext = {
+  count: 0,
+  player: X,
+  board: [null, null, null, null, null, null, null, null, null],
+  isOver: false,
+  winner: null,
+  isCat: false,
+};
+
+const reset = assign(() => {
+  console.log('reset');
+  return initialContext;
+});
 
 const markSquare = assign({
   board: (context, event) => {
@@ -31,9 +45,36 @@ const checkWin = assign(({board}) => {
   let winner = null;
   let isCat = false;
 
+  const [zero, one, two, three, four, five, six, seven, eight ] = board;
   // check horizontals
-
-  // check verticals
+  if (zero === one & one === two && two !== null) { // top row
+    isOver = true;
+    winner = zero;
+  } else if (three === four && four === five && five !== null) { // middle row
+    isOver = true;
+    winner = three;
+  } else if (six === seven && seven === eight && eight !== null) { // bottom row
+    isOver = true;
+    winner = six;
+  } else if (zero === three && three === six && six !== null) { // left column
+    isOver = true;
+    winner = zero;
+  } else if (one === four && four === seven && seven !== null) { // middle column
+    isOver = true;
+    winner = one;
+  } else if (two === five && five === eight && eight !== null) { // right column
+    isOver = true;
+    winner = two;
+  } else if (zero === four && four === eight && eight !== null) { // diagonal down to the right
+    isOver = true;
+    winner = zero;
+  } else if (two === four && four === six && six !== null) { // diagonal down to the left
+    isOver = true;
+    winner = two;
+  } else if (board.filter((square) => square === null).length === 0) { // cat game
+    isOver = true;
+    isCat = true;
+  }
 
   return {
     isOver,
@@ -42,13 +83,12 @@ const checkWin = assign(({board}) => {
   }
 });
 
-function isOver(context, event) {
-  console.log(`isOver: ${context.count}`);
-  return context.count > 9;
+function isOver(context) {
+  console.log(`isOver: ${context.isOver}`);
+  return context.isOver;
 }
 
 function isLegalMove(context, event) {
-  console.log('isLegalMove')
   const { squareClicked } = event.data;
   console.log(`isLegalMove: ${squareClicked}`)
   return context.board[squareClicked] === null;
@@ -58,16 +98,15 @@ const stateMachine = createMachine(
   {
     predictableActionArguments: true,
     id: 'ttt',
-    initial: 'playing',
-    context: {
-      count: 0,
-      player: X,
-      board: [null, null, null, null, null, null, null, null, null],
-      isOver: false,
-      winner: null,
-      cat: false,
-    },
+    initial: 'init',
+    context: initialContext,
     states: {
+      init: {
+        always: {
+          target: 'playing',
+          actions: 'reset',
+        },
+      },
       playing: {
         always: {
           target: 'over',
@@ -87,7 +126,7 @@ const stateMachine = createMachine(
     }, 
   },
   {
-    actions: { swapPlayer, markSquare, checkWin },
+    actions: { swapPlayer, markSquare, checkWin, reset },
     guards: { isOver, isLegalMove },
   }
 );
@@ -104,13 +143,24 @@ function App() {
         {state.context.board.map((elem, index) => (
           <span
             key={index}
-            className={`board-piece board-piece-${index}`}
-            onClick={() => { send({type: 'PLAY', data: {squareClicked: index} })}}
+            className={`board-piece board-piece-${index} ${elem === null && 'open'}`}
+            onClick={() => {
+              if (elem === null && !state.context.isOver) {
+                send({type: 'PLAY', data: {squareClicked: index} })
+              }
+            }}
           >
             {elem || null}
           </span>
         ))}
       </div>
+      {state.value === 'over' && (
+        <>
+          <h2>Game Over</h2>
+          {state.context.winner && (<h3>Winner: {state.context.winner}</h3>)}
+          {state.context.isCat && (<h3>Cat game! (tie)</h3>)}
+        </>
+      )}
     </main>
   );
 }
