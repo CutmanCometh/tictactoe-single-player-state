@@ -108,21 +108,25 @@ const stateMachine = createMachine(
         },
       },
       playing: {
-        always: {
-          target: 'over',
-          cond: 'isOver',
-        },
         on: {
           PLAY: {
             target: 'playing',
             actions: ['markSquare', 'swapPlayer', 'checkWin'],
             cond: 'isLegalMove',
-          }
-        }
+          },
+        },
+        always: {
+          target: 'over',
+          cond: 'isOver',
+        },
       },
       over: {
-
-      }
+        on: {
+          RESET: {
+            target: 'init',
+          },
+        },
+      },
     }, 
   },
   {
@@ -143,7 +147,7 @@ function App() {
         {state.context.board.map((elem, index) => (
           <span
             key={index}
-            className={`board-piece board-piece-${index} ${elem === null && 'open'}`}
+            className={`board-piece board-piece-${index} ${(elem === null && !state.context.isOver) && 'open'}`}
             onClick={() => {
               if (elem === null && !state.context.isOver) {
                 send({type: 'PLAY', data: {squareClicked: index} })
@@ -159,6 +163,7 @@ function App() {
           <h2>Game Over</h2>
           {state.context.winner && (<h3>Winner: {state.context.winner}</h3>)}
           {state.context.isCat && (<h3>Cat game! (tie)</h3>)}
+          <button onClick={() => {send({type: 'RESET'})}}>Play Again</button>
         </>
       )}
     </main>
