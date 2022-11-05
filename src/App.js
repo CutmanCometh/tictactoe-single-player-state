@@ -158,6 +158,9 @@ function App() {
           </span>
         ))}
       </div>
+      {state.value === 'playing' && (
+        <span>Next player: {state.context.player}</span>
+      )}
       {state.value === 'over' && (
         <>
           <h2>Game Over</h2>
