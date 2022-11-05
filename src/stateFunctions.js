@@ -17,7 +17,6 @@ export const reset = assign(() => {
 
 export const markSquare = assign({
   board: (context, event) => {
-    console.log(`markSquare`);
     const { board: oldBoard, player } = context;
     const { squareClicked } = event.data;
     const newBoard = oldBoard.map((elem, index) =>
