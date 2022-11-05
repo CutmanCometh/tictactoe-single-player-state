@@ -10,7 +10,7 @@ function App() {
   return (
     <main>
       <div
-        className='game-container'
+        className='game-container container'
       >
         {state.context.board.map((elem, index) => (
           <span
@@ -27,15 +27,16 @@ function App() {
         ))}
       </div>
       {state.value === 'playing' && (
-        <span>Next player: {state.context.player}</span>
+        <div className='container info'>
+          <span className='next-player'>Next player: {state.context.player}</span>
+        </div>
       )}
       {state.value === 'over' && (
-        <>
-          <h2>Game Over</h2>
-          {state.context.winner && (<h3>Winner: {state.context.winner}</h3>)}
+        <div className='container info'>
+          {state.context.winner && (<h2>Winner: {state.context.winner}</h2>)}
           {state.context.isCat && (<h3>Cat game! (tie)</h3>)}
-          <button onClick={() => {send({type: 'RESET'})}}>Play Again</button>
-        </>
+          <button className='reset-button' onClick={() => {send({type: 'RESET'})}}>Play Again</button>
+        </div>
       )}
     </main>
   );

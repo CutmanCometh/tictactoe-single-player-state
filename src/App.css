@@ -3,6 +3,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  font-family: "Sniglet", sans-serif;
 }
 
 div#root {
@@ -17,7 +18,16 @@ main {
   width: 960px;
   max-height: 100%;
   margin: 0 auto;
-  background-color: #aaa;
+  background-color: #fff;
+}
+
+.container {
+  width: 630px;
+  margin: 30px auto 0 auto;
+}
+
+.info {
+  font-size: 4em;
 }
 
 div.game-container {
@@ -25,7 +35,10 @@ div.game-container {
   justify-content: center;
   flex-wrap: wrap;
   width: 630px;
-  margin: 0 auto;
+}
+
+h2, h3 {
+  margin: 0;
 }
 
 .board-piece {
@@ -56,4 +69,12 @@ div.game-container {
 .board-piece:nth-child(n+4):nth-child(-n+6) {
   border-bottom: 3px solid black;
   border-top: 3px solid black;
+}
+
+.reset-button {
+  border-radius: 15px;
+  background-color: #fff;
+  font-family: "Sniglet", sans-serif;
+  font-size: 1em;
+  cursor: pointer;
 }
