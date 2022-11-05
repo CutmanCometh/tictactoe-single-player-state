@@ -1,38 +1,59 @@
-.App {
-  text-align: center;
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+div#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+main {
+  height: 100%;
+  width: 960px;
+  max-height: 100%;
+  margin: 0 auto;
+  background-color: #aaa;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+div.game-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-wrap: wrap;
+  width: 630px;
+  margin: 0 auto;
 }
 
-.App-link {
-  color: #61dafb;
+.board-piece {
+  width: 200px;
+  height: 200px;
+  border: 1px solid white;
+  border-collapse: collapse;
+  background-color: #fff;
+  font-size: 15em;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 170px;
+  cursor: not-allowed;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.board-piece.open {
+  cursor: pointer;
+}
+
+.board-piece:nth-child(3n) {
+  border-left: 3px solid black;
+}
+
+.board-piece:nth-child(3n - 2) {
+  border-right: 3px solid black;
+}
+
+.board-piece:nth-child(n+4):nth-child(-n+6) {
+  border-bottom: 3px solid black;
+  border-top: 3px solid black;
 }
